@@ -20,19 +20,25 @@ html, body {
 a { color: inherit; text-decoration: none; }
 [hidden] { display: none !important; }
 
-/* Every page is designed on a 1512 x 982 frame (MacBook Pro 14")
-   and scaled to fit the window by common.js */
+/* .stage fills the whole window (background reaches every edge).
+   .frame holds the content, designed at 1512 x 982 and scaled
+   by common.js so it always fits in the middle of the screen. */
 .stage {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: var(--cream) center / 100% 100% no-repeat;
+  font-family: "Special Elite", "Courier Prime", monospace;
+  color: var(--text);
+  --s: 1;
+}
+.frame {
   position: absolute;
   left: 50%;
   top: 50%;
   width: 1512px;
   height: 982px;
   transform-origin: center center;
-  overflow: hidden;
-  background: var(--cream) center / cover no-repeat;
-  font-family: "Special Elite", "Courier Prime", monospace;
-  color: var(--text);
 }
 
 .bg-rainbow { background-image: url(assets/bg/rainbow.jpg); }
@@ -51,9 +57,9 @@ a { color: inherit; text-decoration: none; }
 /* top-right link (About / Back) */
 .corner {
   position: absolute;
-  right: 56px;
-  top: 34px;
-  font-size: 30px;
+  right: calc(56px * var(--s));
+  top: calc(34px * var(--s));
+  font-size: calc(30px * var(--s));
   color: var(--title);
   z-index: 5;
   transition: opacity .2s;
@@ -130,6 +136,7 @@ a { color: inherit; text-decoration: none; }
   width: 320px;
   height: 84px;
   margin: -42px 0 0 -160px;
+  overflow: visible;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -140,12 +147,14 @@ a { color: inherit; text-decoration: none; }
 .blob::before {
   content: "";
   position: absolute;
-  inset: 0;
+  inset: 16px 24px;
   border-radius: 999px;
   background: var(--c);
-  opacity: .88;
-  filter: blur(12px);
-  transition: filter .25s, opacity .25s;
+  /* soft edge made with a shadow instead of a blur filter,
+     so Safari doesn't show a hard box on hover */
+  box-shadow: 0 0 24px 16px var(--c);
+  opacity: .85;
+  transition: opacity .25s, transform .25s;
 }
 .blob span { position: relative; }
 .blob .hint {
@@ -161,7 +170,7 @@ a { color: inherit; text-decoration: none; }
   transition: opacity .25s;
   pointer-events: none;
 }
-.blob:hover::before { filter: blur(6px); opacity: 1; }
+.blob:hover::before { opacity: 1; transform: scale(1.05); }
 .blob:hover .hint { opacity: 1; }
 
 /* ---------- QUIZ ---------- */
@@ -279,16 +288,10 @@ a { color: inherit; text-decoration: none; }
 
 .s-buttons {
   position: absolute;
-  right: 56px;
-  bottom: 40px;
-  display: flex;
-  gap: 32px;
-  font-size: 20px;
+  right: calc(56px * var(--s));
+  bottom: calc(40px * var(--s));
+  font-size: calc(24px * var(--s));
   color: var(--title);
   z-index: 5;
-}
-.s-buttons a {
-  border-bottom: 1.5px solid rgba(126, 112, 105, .45);
-  padding-bottom: 4px;
 }
 .s-buttons a:hover { opacity: .6; }
