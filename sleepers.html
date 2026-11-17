@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meet the Sleepers · How Do You Fall Asleep?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime&family=Special+Elite&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script src="common.js"></script>
+</head>
+<body>
+<div class="stage bg-rainbow">
+  <a class="corner" href="index.html">Back</a>
+  <div class="page-title">Meet the Sleepers</div>
+  <div id="blobs"></div>
+</div>
+<script src="data.js"></script>
+<script>
+  const box = document.getElementById("blobs");
+  for (const id in SLEEPERS) {
+    const s = SLEEPERS[id];
+    const [x, y] = BLOB_POS[id];
+    const a = document.createElement("a");
+    a.className = "blob";
+    a.href = "sleeper.html?id=" + id;
+    a.style.left = x + "px";
+    a.style.top = y + "px";
+    a.style.setProperty("--c", s.blob);
+    a.innerHTML = "<span>" + s.name + "</span><span class='hint'>( " + s.hint + " )</span>";
+    box.appendChild(a);
+  }
+</script>
+</body>
+</html>

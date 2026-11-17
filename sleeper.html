@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sleeper · How Do You Fall Asleep?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime&family=Special+Elite&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script src="common.js"></script>
+</head>
+<body>
+<div class="stage" id="stage">
+  <a class="corner" id="back" href="sleepers.html">Back</a>
+  <img class="s-name" id="name" alt="">
+  <img class="s-tagline" id="tagline" alt="">
+  <img class="s-ill" id="ill" alt="">
+  <div class="s-text" id="text"></div>
+  <div class="s-buttons" id="buttons" hidden>
+    <a href="quiz.html">↺ Retake</a>
+    <a href="sleepers.html">Browse sleepers</a>
+  </div>
+</div>
+<script src="data.js"></script>
+<script>
+  const params = new URLSearchParams(location.search);
+  const id = SLEEPERS[params.get("id")] ? params.get("id") : "plush";
+  const s = SLEEPERS[id];
+
+  document.title = s.name + " · How Do You Fall Asleep?";
+  const stage = document.getElementById("stage");
+  stage.style.backgroundImage = "url(assets/bg/mist-" + id + ".jpg)";
+  stage.style.setProperty("--c", s.color);
+
+  // titles: keep the same letter size on every page
+  const nameImg = document.getElementById("name");
+  const tagImg = document.getElementById("tagline");
+  nameImg.onload = () => { nameImg.style.width = nameImg.naturalWidth * 0.51 + "px"; };
+  tagImg.onload = () => { tagImg.style.width = tagImg.naturalWidth * 0.367 + "px"; };
+  nameImg.src = "assets/titles/" + id + "-name.png";
+  tagImg.src = "assets/titles/" + id + "-tagline.png";
+  nameImg.alt = s.name;
+  document.getElementById("ill").src = "assets/illustrations/" + id + ".png";
+
+  const circled = ["①", "②", "③"];
+  document.getElementById("text").innerHTML =
+    "<p class='you-are'>you are</p>" +
+    "<p class='name'>" + s.name + "</p>" +
+    "<p>" + s.desc + "</p>" +
+    "<p class='label'>try this tonight</p>" +
+    s.tips.map((t, i) => "<p class='tip'><i>" + circled[i] + "</i>" + t + "</p>").join("") +
+    "<p class='label'>field note</p>" +
+    "<ul>" + s.notes.map(t => "<li>" + t + "</li>").join("") + "</ul>";
+
+  // coming from the quiz: show Retake / Browse buttons
+  if (params.get("from") === "quiz") {
+    document.getElementById("buttons").hidden = false;
+    document.getElementById("back").href = "index.html";
+    document.getElementById("text").style.bottom = "100px";
+    document.getElementById("text").style.paddingBottom = "30px";
+  }
+</script>
+</body>
+</html>

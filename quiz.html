@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quiz · How Do You Fall Asleep?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime&family=Special+Elite&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script src="common.js"></script>
+</head>
+<body>
+<div class="stage bg-mist">
+  <div id="quiz" class="fade">
+    <div class="options" id="options"></div>
+    <div class="q-title" id="qTitle"></div>
+    <div class="q-text" id="qText"></div>
+    <div class="q-progress" id="qProgress"></div>
+  </div>
+</div>
+<script src="data.js"></script>
+<script>
+  // the bouncy "Question one" lettering
+  const DY = [0, -14, 8, -6, 12, -10, 4, 0, -12, 6, -4, 10];
+  const SZ = [1, .82, .9, .78, .95, .85, .8, 1, .88, .8, .92, .84];
+  function wobble(text) {
+    return [...text].map((ch, i) =>
+      ch === " " ? "<span>  </span>" :
+      "<span style='transform:translateY(" + DY[i % 12] + "px) scale(" + SZ[i % 12] + ")'>" + ch + "</span>"
+    ).join("");
+  }
+
+  const score = {};
+  let n = 0;
+  const wrap = document.getElementById("quiz");
+
+  function show() {
+    const item = QUIZ[n];
+    document.getElementById("qTitle").innerHTML = wobble(item.title);
+    document.getElementById("qText").textContent = item.q;
+    document.getElementById("qProgress").textContent =
+      "question 0" + (n + 1) + " / 0" + QUIZ.length;
+    const opts = document.getElementById("options");
+    opts.innerHTML = "";
+    item.a.forEach(([text, who], i) => {
+      const d = document.createElement("div");
+      d.className = "option";
+      d.innerHTML = "<b>" + "ABCD"[i] + ".</b>" + text;
+      d.onclick = () => pick(d, who);
+      opts.appendChild(d);
+    });
+  }
+
+  function pick(el, who) {
+    el.classList.add("selected");
+    score[who] = (score[who] || 0) + 1;
+    wrap.classList.add("out");
+    setTimeout(() => {
+      n++;
+      if (n < QUIZ.length) {
+        show();
+        wrap.classList.remove("out");
+      } else {
+        // highest score wins; ties go to the sleeper picked first
+        let best = null;
+        for (const k in score) if (best === null || score[k] > score[best]) best = k;
+        location.href = "sleeper.html?id=" + best + "&from=quiz";
+      }
+    }, 450);
+  }
+
+  show();
+</script>
+</body>
+</html>
